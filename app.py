@@ -3,9 +3,10 @@ from prometheus_client import start_http_server, Gauge
 import json
 import time
 
-# Get go2rtc path from argument
+# Get go2rtc path from argument or environment variablev1
 import sys
-go2rtc_path = sys.argv[1]
+import os
+go2rtc_path = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("GO2RTC_PATH", "http://localhost:1984/api/streams")
 
 from flask import Flask
 from prometheus_client import generate_latest, Counter
