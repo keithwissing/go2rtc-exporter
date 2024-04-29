@@ -6,7 +6,7 @@ import time
 # Get go2rtc path from argument or environment variablev1
 import sys
 import os
-go2rtc_path = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("GO2RTC_PATH", "http://localhost:1984/api/streams")
+go2rtc_api_url = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("GO2RTC_API_URL", "http://localhost:1984/api/streams")
 
 from flask import Flask
 from prometheus_client import generate_latest, Counter
@@ -51,7 +51,7 @@ def update_metrics(json_data):
 # Function to fetch data from API
 def fetch_data_from_api():
     try:
-        response = requests.get(go2rtc_path)
+        response = requests.get(go2rtc_api_url)
         if response.status_code == 200:
             return response.json()
         else:
