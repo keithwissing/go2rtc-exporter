@@ -29,24 +29,26 @@ def update_metrics(json_data):
             num_producers_gauge.labels(camera).set(num_producers)
             if data["producers"]:
                 for producer in data["producers"]:
-                    if "recv" in producer:
-                        recv_bytes_gauge.labels(
-                            camera=camera,
-                            user_agent=producer.get("user_agent", ""),
-                            ip_address=producer.get("remote_addr", ""),
-                            media_type=producer.get("medias", ["Unknown"])[0],
-                            connection_type=producer.get("type", ""),
-                        ).set(producer["recv"])
+                    for field in ["bytes_recv", "recv"]:
+                        if field in producer:
+                            recv_bytes_gauge.labels(
+                                camera=camera,
+                                user_agent=producer.get("user_agent", ""),
+                                ip_address=producer.get("remote_addr", ""),
+                                media_type=producer.get("medias", ["Unknown"])[0],
+                                connection_type=producer.get("type", ""),
+                            ).set(producer[field])
             if data["consumers"]:
                 for consumer in data["consumers"]:
-                    if "send" in consumer:
-                        send_bytes_gauge.labels(
-                            camera=camera,
-                            user_agent=consumer.get("user_agent", ""),
-                            ip_address=consumer.get("remote_addr", ""),
-                            media_type=consumer.get("medias", ["Unknown"])[0],
-                            connection_type=consumer.get("type", ""),
-                        ).set(consumer["send"])
+                    for field in ["bytes_send", "send"]:
+                        if field in consumer:
+                            send_bytes_gauge.labels(
+                                camera=camera,
+                                user_agent=consumer.get("user_agent", ""),
+                                ip_address=consumer.get("remote_addr", ""),
+                                media_type=consumer.get("medias", ["Unknown"])[0],
+                                connection_type=consumer.get("type", ""),
+                            ).set(consumer[field])
 
 # Function to fetch data from API
 def fetch_data_from_api():
